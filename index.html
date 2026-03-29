@@ -10,7 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -42,36 +41,52 @@
             <div class="w-6 h-6"><svg viewBox="0 0 100 100" fill="none"><path d="M50 5L10 95H35L50 60L65 95H90L50 5Z" fill="black"/></svg></div>
             <span id="title" class="font-black text-[10px] uppercase tracking-[0.3em]">Workstation</span>
         </div>
-        <button onclick="run()" class="bg-black text-white px-5 py-2.5 rounded-xl font-bold text-[9px] uppercase tracking-widest">Export</button>
+        <button onclick="run()" class="bg-black text-white px-5 py-2.5 rounded-xl font-bold text-[9px] uppercase tracking-widest active:scale-95 transition-transform">Export PDF</button>
     </header>
 
     <main class="main-content">
         <div id="view-text" class="tool-view h-full">
-            <textarea id="txtIn" class="w-full h-full bg-transparent border-none outline-none text-xl font-light" placeholder="Draft..."></textarea>
+            <textarea id="txtIn" class="w-full h-full bg-transparent border-none outline-none text-xl font-light placeholder:opacity-20" placeholder="Begin drafting your document..."></textarea>
         </div>
+
         <div id="view-img" class="tool-view hidden">
-            <div class="border-dashed border-2 border-gray-100 rounded-[3rem] min-h-[350px] flex items-center justify-center relative">
-                <input type="file" id="imgFile" class="absolute inset-0 opacity-0" onchange="preview(event)">
-                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Select Image</p>
-                <div id="preContent"></div>
+            <div class="border-dashed border-2 border-gray-100 rounded-[3rem] min-h-[400px] flex flex-col items-center justify-center relative bg-gray-50/30">
+                <input type="file" id="imgFile" class="absolute inset-0 opacity-0 cursor-pointer" onchange="preview(event)">
+                <div id="preContent" class="text-center pointer-events-none">
+                    <i data-lucide="image-plus" class="w-10 h-10 mx-auto mb-4 text-zinc-200"></i>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Tap to Import Visual Asset</p>
+                </div>
             </div>
         </div>
-        <div id="view-edit" class="tool-view hidden space-y-4">
-            <input type="file" id="pdfFile" class="text-[10px]">
-            <input type="text" id="editLabel" placeholder="Text Overlay" class="w-full bg-gray-50 p-6 rounded-3xl outline-none">
+
+        <div id="view-edit" class="tool-view hidden space-y-6">
+            <div class="bg-zinc-950 p-8 rounded-[2.5rem] text-white">
+                <p class="text-[8px] uppercase font-bold tracking-widest opacity-40 mb-4">Source Document</p>
+                <input type="file" id="pdfFile" accept=".pdf" class="text-[10px] block w-full text-zinc-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-zinc-800 file:text-zinc-300">
+            </div>
+            <input type="text" id="editLabel" placeholder="Enter Overlay Text" class="w-full bg-gray-50 p-6 rounded-3xl outline-none border border-transparent focus:border-zinc-200 transition-all">
+            <div class="p-6 bg-zinc-50 rounded-3xl">
+                <p class="text-[8px] uppercase font-bold tracking-widest text-zinc-400 mb-4 text-center">Vertical Alignment (0-100)</p>
+                <input type="range" id="yPos" min="10" max="90" value="50" class="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-black">
+            </div>
         </div>
+
         <div id="view-url" class="tool-view hidden">
-            <input type="text" id="urlIn" placeholder="Enter URL" class="w-full bg-gray-50 p-6 rounded-3xl outline-none">
+            <div class="bg-gray-50 p-10 rounded-[3rem] text-center border border-gray-100">
+                <i data-lucide="globe" class="w-8 h-8 mx-auto mb-6 text-zinc-300"></i>
+                <input type="text" id="urlIn" placeholder="https://example.com" class="w-full bg-white p-6 rounded-2xl outline-none border border-gray-100 shadow-sm mb-4">
+                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic">Live URL to PDF Capture</p>
+            </div>
         </div>
     </main>
 
     <nav class="bottom-nav">
-        <div onclick="show('text')" id="tab-text" class="nav-item nav-active"><i data-lucide="type" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Text</span></div>
-        <div onclick="show('img')" id="tab-img" class="nav-item"><i data-lucide="image" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Image</span></div>
-        <div onclick="show('edit')" id="tab-edit" class="nav-item"><i data-lucide="layers" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Edit</span></div>
-        <div onclick="show('url')" id="tab-url" class="nav-item"><i data-lucide="zap" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Snap</span></div>
+        <div onclick="show('text')" id="tab-text" class="nav-item nav-active"><i data-lucide="file-text" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Text</span></div>
+        <div onclick="show('img')" id="tab-img" class="nav-item"><i data-lucide="image" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Media</span></div>
+        <div onclick="show('edit')" id="tab-edit" class="nav-item"><i data-lucide="layers" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Modify</span></div>
+        <div onclick="show('url')" id="tab-url" class="nav-item"><i data-lucide="link" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Capture</span></div>
     </nav>
 
     <script src="script.js"></script>
 </body>
-                                                                                                            </html>
+</html>
