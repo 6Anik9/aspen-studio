@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aspen | Studio Suite</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="welcome-screen">
+        <div class="particle-stage" id="particle-stage"></div>
+        <div class="glass-card">
+            <div class="mb-6 mx-auto w-16 h-16">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 10L15 90H35L50 55L65 90H85L50 10Z" fill="black"/>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-extrabold italic tracking-tighter mb-1">ASPEN</h1>
+            <p class="text-[8px] font-bold tracking-[0.5em] text-zinc-400 uppercase mb-8">Studio Suite</p>
+            <button onclick="enterStudio()" class="btn-launch">Initialize</button>
+            <div class="welcome-footer">
+                <p class="text-[7px] font-black text-zinc-500 tracking-[0.2em] uppercase">Design & Architect by MD ANiK SHEiKH</p>
+                <div class="social-row">
+                    <a href="https://facebook.com/6mdaniksheikh9" class="social-link"><i data-lucide="facebook"></i></a>
+                    <a href="https://instagram.com/6mdaniksheikh9" class="social-link"><i data-lucide="instagram"></i></a>
+                    <a href="https://github.com/6anik9" class="social-link"><i data-lucide="github"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="flex items-center gap-3">
+            <div class="w-6 h-6"><svg viewBox="0 0 100 100" fill="none"><path d="M50 5L10 95H35L50 60L65 95H90L50 5Z" fill="black"/></svg></div>
+            <span id="title" class="font-black text-[10px] uppercase tracking-[0.3em]">Workstation</span>
+        </div>
+        <button onclick="run()" class="bg-black text-white px-5 py-2.5 rounded-xl font-bold text-[9px] uppercase tracking-widest">Export</button>
+    </header>
+
+    <main class="main-content">
+        <div id="view-text" class="tool-view h-full">
+            <textarea id="txtIn" class="w-full h-full bg-transparent border-none outline-none text-xl font-light" placeholder="Draft..."></textarea>
+        </div>
+        <div id="view-img" class="tool-view hidden">
+            <div class="border-dashed border-2 border-gray-100 rounded-[3rem] min-h-[350px] flex items-center justify-center relative">
+                <input type="file" id="imgFile" class="absolute inset-0 opacity-0" onchange="preview(event)">
+                <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Select Image</p>
+                <div id="preContent"></div>
+            </div>
+        </div>
+        <div id="view-edit" class="tool-view hidden space-y-4">
+            <input type="file" id="pdfFile" class="text-[10px]">
+            <input type="text" id="editLabel" placeholder="Text Overlay" class="w-full bg-gray-50 p-6 rounded-3xl outline-none">
+        </div>
+        <div id="view-url" class="tool-view hidden">
+            <input type="text" id="urlIn" placeholder="Enter URL" class="w-full bg-gray-50 p-6 rounded-3xl outline-none">
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <div onclick="show('text')" id="tab-text" class="nav-item nav-active"><i data-lucide="type" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Text</span></div>
+        <div onclick="show('img')" id="tab-img" class="nav-item"><i data-lucide="image" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Image</span></div>
+        <div onclick="show('edit')" id="tab-edit" class="nav-item"><i data-lucide="layers" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Edit</span></div>
+        <div onclick="show('url')" id="tab-url" class="nav-item"><i data-lucide="zap" class="w-5 h-5"></i><span class="text-[8px] font-bold uppercase mt-1">Snap</span></div>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+                                                                                                            </html>
