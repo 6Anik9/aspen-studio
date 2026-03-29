@@ -3,7 +3,7 @@ lucide.createIcons();
 
 let selectedImg = null;
 
-// Particle System
+// Particle Background Engine
 const stage = document.getElementById('particle-stage');
 for (let i = 0; i < 20; i++) {
     const p = document.createElement('div');
@@ -21,7 +21,7 @@ for (let i = 0; i < 20; i++) {
     stage.appendChild(p);
 }
 
-// Navigation Logic
+// Navigation
 function enterStudio() { 
     const ws = document.getElementById('welcome-screen');
     ws.style.opacity = '0';
@@ -34,49 +34,99 @@ function show(id) {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
     document.getElementById('view-' + id).classList.remove('hidden');
     document.getElementById('tab-' + id).classList.add('nav-active');
-    document.getElementById('title').innerText = id.toUpperCase();
+    document.getElementById('title').innerText = id === 'url' ? 'CAPTURE' : id.toUpperCase();
 }
 
-// Image Preview
+// Image Preview with Auto-Scaling
 function preview(e) {
     const r = new FileReader();
     r.onload = (ev) => {
         selectedImg = ev.target.result;
-        document.getElementById('preContent').innerHTML = `<img src="${selectedImg}" class="max-h-60 rounded-[2.5rem] mx-auto mt-4 shadow-xl">`;
+        document.getElementById('preContent').innerHTML = `
+            <img src="${selectedImg}" class="max-h-80 rounded-3xl mx-auto shadow-2xl border-4 border-white transition-all">
+            <p class="text-[8px] font-bold text-zinc-400 mt-4 tracking-widest uppercase">Asset Locked</p>`;
     };
     r.readAsDataURL(e.target.files[0]);
 }
 
-// PDF Export Engine
+// --- CORE STUDIO ENGINE (UPGRADED) ---
 async function run() {
     const active = document.querySelector('.nav-active').id.replace('tab-', '');
     const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const now = new Date().toLocaleDateString();
+
     try {
         if(active === 'text') {
-            const doc = new jsPDF();
-            doc.text(document.getElementById('txtIn').value || "Aspen Project", 20, 25);
-            doc.save("Aspen_Text.pdf");
+            const content = document.getElementById('txtIn').value;
+            if(!content) throw new Error("Empty Studio Canvas");
+
+            // Professional Branding Header
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9);
+            doc.text("ASPEN | ARCHITECTURAL DRAFT", 20, 15);
+            doc.text(now, 175, 15);
+            doc.line(20, 18, 190, 18);
+
+            // Text Formatting Logic
+            doc.setFont("times", "normal");
+            doc.setFontSize(12);
+            const lines = doc.splitTextToSize(content, 170);
+            doc.text(lines, 20, 30);
+            doc.save("Aspen_Draft.pdf");
+
         } else if(active === 'img') {
-            if(!selectedImg) throw new Error("Select Media First");
-            const doc = new jsPDF();
-            doc.addImage(selectedImg, 'JPEG', 10, 10, 190, 150);
-            doc.save("Aspen_Media.pdf");
+            if(!selectedImg) throw new Error("Select Media");
+            
+            const props = doc.getImageProperties(selectedImg);
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            
+            // Pro-Scaling Logic
+            let width = pageWidth - 40;
+            let height = (props.height * width) / props.width;
+            
+            if(height > pageHeight - 60) {
+                height = pageHeight - 60;
+                width = (props.width * height) / props.height;
+            }
+
+            const x = (pageWidth - width) / 2;
+            doc.addImage(selectedImg, 'JPEG', x, 30, width, height);
+            doc.save("Aspen_Image_Master.pdf");
+
         } else if(active === 'url') {
-            const u = document.getElementById('urlIn').value;
-            if(!u) throw new Error("URL Needed");
-            window.open(`https://api.html2pdf.app/v1/generate?url=${encodeURIComponent(u)}&apiKey=public`, '_blank');
+            const target = document.getElementById('urlIn').value;
+            if(!target) throw new Error("Missing Domain");
+            window.open(`https://api.html2pdf.app/v1/generate?url=${encodeURIComponent(target)}&apiKey=public`, '_blank');
+
         } else if(active === 'edit') {
-            const { PDFDocument } = PDFLib;
-            const file = document.getElementById('pdfFile').files[0];
-            if(!file) throw new Error("Select PDF");
-            const bytes = await file.arrayBuffer();
-            const doc = await PDFDocument.load(bytes);
-            const page = doc.getPages()[0];
-            page.drawText(document.getElementById('editLabel').value || "Aspen", {
-                x: 50, y: 50, size: 20
+            const { PDFDocument, rgb } = PDFLib;
+            const fileInput = document.getElementById('pdfFile').files[0];
+            const textOverlay = document.getElementById('editLabel').value;
+            const yPercent = document.getElementById('yPos').value;
+
+            if(!fileInput) throw new Error("No Source PDF");
+
+            const bytes = await fileInput.arrayBuffer();
+            const pdfDoc = await PDFDocument.load(bytes);
+            const pages = pdfDoc.getPages();
+            const firstPage = pages[0];
+
+            // Overlay Logic
+            firstPage.drawText(textOverlay || "ASPEN VERIFIED", {
+                x: 50,
+                y: (firstPage.getHeight() * (yPercent / 100)),
+                size: 24,
+                color: rgb(0, 0, 0)
             });
-            const uri = await doc.saveAsBase64({ dataUri: true });
-            const a = document.createElement('a'); a.href = uri; a.download = "Aspen_Mod.pdf"; a.click();
+
+            const savedBytes = await pdfDoc.save();
+            const blob = new Blob([savedBytes], { type: 'application/pdf' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "Aspen_Modified.pdf";
+            link.click();
         }
-    } catch (e) { alert(e.message); }
-}
+    } catch (e) { alert("Studio Error: " + e.message); }
+        }
