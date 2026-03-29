@@ -46,7 +46,7 @@
 
     <main class="main-content">
         <div id="view-text" class="tool-view h-full">
-            <textarea id="txtIn" class="w-full h-full bg-transparent border-none outline-none text-xl font-light placeholder:opacity-20" placeholder="Begin drafting your document..."></textarea>
+            <textarea id="txtIn" class="w-full h-full bg-transparent border-none outline-none text-xl font-light placeholder:opacity-20" placeholder="Begin drafting..."></textarea>
         </div>
 
         <div id="view-img" class="tool-view hidden">
@@ -54,28 +54,26 @@
                 <input type="file" id="imgFile" class="absolute inset-0 opacity-0 cursor-pointer" onchange="preview(event)">
                 <div id="preContent" class="text-center pointer-events-none">
                     <i data-lucide="image-plus" class="w-10 h-10 mx-auto mb-4 text-zinc-200"></i>
-                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Tap to Import Visual Asset</p>
+                    <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Import Media</p>
                 </div>
             </div>
         </div>
 
         <div id="view-edit" class="tool-view hidden space-y-6">
             <div class="bg-zinc-950 p-8 rounded-[2.5rem] text-white">
-                <p class="text-[8px] uppercase font-bold tracking-widest opacity-40 mb-4">Source Document</p>
-                <input type="file" id="pdfFile" accept=".pdf" class="text-[10px] block w-full text-zinc-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-zinc-800 file:text-zinc-300">
+                <input type="file" id="pdfFile" accept=".pdf" class="text-[10px] w-full text-zinc-500 file:bg-zinc-800 file:text-zinc-300 file:rounded-full file:border-0 file:px-4 file:py-2">
             </div>
-            <input type="text" id="editLabel" placeholder="Enter Overlay Text" class="w-full bg-gray-50 p-6 rounded-3xl outline-none border border-transparent focus:border-zinc-200 transition-all">
+            <input type="text" id="editLabel" placeholder="Overlay Text" class="w-full bg-gray-50 p-6 rounded-3xl outline-none">
             <div class="p-6 bg-zinc-50 rounded-3xl">
-                <p class="text-[8px] uppercase font-bold tracking-widest text-zinc-400 mb-4 text-center">Vertical Alignment (0-100)</p>
-                <input type="range" id="yPos" min="10" max="90" value="50" class="w-full h-1 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-black">
+                <p class="text-[8px] uppercase font-bold tracking-widest text-zinc-400 mb-4 text-center">Vertical Position</p>
+                <input type="range" id="yPos" min="5" max="95" value="50" class="w-full accent-black">
             </div>
         </div>
 
         <div id="view-url" class="tool-view hidden">
             <div class="bg-gray-50 p-10 rounded-[3rem] text-center border border-gray-100">
-                <i data-lucide="globe" class="w-8 h-8 mx-auto mb-6 text-zinc-300"></i>
-                <input type="text" id="urlIn" placeholder="https://example.com" class="w-full bg-white p-6 rounded-2xl outline-none border border-gray-100 shadow-sm mb-4">
-                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic">Live URL to PDF Capture</p>
+                <input type="text" id="urlIn" placeholder="https://example.com" class="w-full bg-white p-6 rounded-2xl outline-none border border-gray-100 mb-4">
+                <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest italic">Live Web Capture</p>
             </div>
         </div>
     </main>
